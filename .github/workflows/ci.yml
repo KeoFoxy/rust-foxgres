@@ -43,5 +43,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: rustup toolchain install ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
+
+      - name: Run database migrations
+        run: |
+          psql -h localhost -p 5432 -U admin -d foxgres -f migrate/create_db.sql
+          psql -h localhost -p 5432 -U admin -d foxgres -f migrate/insert_db.sql
+
       - run: cargo build --verbose
       - run: cargo test --verbose

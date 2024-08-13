@@ -16,6 +16,19 @@ services:
     ports:
       - '5432:5432'
 
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.migrate
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: foxgres
+      DATABASE_USERNAME: admin
+      DATABASE_PASSWORD: admin
+    depends_on:
+      - db
+
   app:
     build:
       context: .
@@ -26,4 +39,4 @@ services:
       - .:/app
     command: ["cargo", "run"]
     depends_on:
-      - db
+      - migrate
