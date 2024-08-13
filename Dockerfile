@@ -1,10 +1,14 @@
 FROM rust:latest
 
-WORKDIR /usr/src/app
+WORKDIR /app
+
+COPY Cargo.toml Cargo.lock ./
+
+RUN cargo build --release
 
 COPY . .
 
-RUN cargo build
+RUN cargo build --release
 
 CMD ["cargo", "run"]
 
