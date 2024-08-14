@@ -51,8 +51,8 @@ jobs:
         env:
           PGPASSWORD: ${{ env.DATABASE_PASSWORD }}
         run: |
-          psql -h localhost -p 5432 -U admin -d foxgres -f migrate/create_db.sql
-          psql -h localhost -p 5432 -U admin -d foxgres -f migrate/insert_db.sql
+          psql -h localhost -p 5432 -U admin -d foxgresrust -f migrate/create_db.sql
+          psql -h localhost -p 5432 -U admin -d foxgresrust -f migrate/insert_db.sql
 
       - run: cargo build --verbose
       - run: cargo test --verbose
