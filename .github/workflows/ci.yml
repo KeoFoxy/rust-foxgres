@@ -21,7 +21,7 @@ jobs:
       LOG_LEVEL: debug
       DATABASE_HOST: localhost
       DATABASE_PORT: 5432
-      DATABASE_NAME: foxgres
+      DATABASE_NAME: foxgresrust
       DATABASE_USERNAME: admin
       DATABASE_PASSWORD: admin
 
@@ -31,7 +31,7 @@ jobs:
         env:
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: admin
-          POSTGRES_DB: foxgres
+          POSTGRES_DB: foxgresrust
         options: >-
           --health-cmd="pg_isready -U admin"
           --health-interval=10s
@@ -44,7 +44,12 @@ jobs:
       - uses: actions/checkout@v4
       - run: rustup toolchain install ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
 
+      - name: Wait for PostgreSQL
+        run: sleep 15
+
       - name: Run database migrations
+        env:
+          PGPASSWORD: ${{ env.DATABASE_PASSWORD }}
         run: |
           psql -h localhost -p 5432 -U admin -d foxgres -f migrate/create_db.sql
           psql -h localhost -p 5432 -U admin -d foxgres -f migrate/insert_db.sql

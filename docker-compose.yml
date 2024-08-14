@@ -12,20 +12,17 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      POSTGRES_DB: foxgres
+      POSTGRES_DB: foxgresrust
     ports:
       - '5432:5432'
 
   migrate:
     build:
       context: .
-      dockerfile: Dockerfile.migrate
+      dockerfile: migrations/Dockerfile
     environment:
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_NAME: foxgres
-      DATABASE_USERNAME: admin
-      DATABASE_PASSWORD: admin
+      DATABASE_URL: postgres://admin:admin@db:5432/foxgresrust
+    command: ["sqlx", "migrate", "run"]
     depends_on:
       - db
 
@@ -33,6 +30,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://admin:admin@db:5432/foxgresrust
     ports:
       - '8080:8080'
     volumes:
